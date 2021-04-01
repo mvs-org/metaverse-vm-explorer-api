@@ -9,6 +9,7 @@ export class TransactionRoutes {
     app.route('/txs/from/:address').get(this.transactionController.listTransactionsFrom)
     app.route('/txs/to/:address').get(this.transactionController.listTransactionsTo)
     app.route('/tx/:hash').get(this.transactionController.getTransaction)
+    app.route('/txs/block/:number').get(this.transactionController.listBlockNumberTransactions)
   }
 
 }

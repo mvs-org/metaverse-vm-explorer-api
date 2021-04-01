@@ -15,12 +15,13 @@ export class TransactionController {
         blockNumber: 1,
         creates: 1,
         to: 1,
+        from: 1,
         value: 1,
         gas: 1,
         gasPrice: 1,
         'receipt.status': 1,
-      })
-      res.setHeader('Cache-Control', 'public, max-age=600, s-maxage=600')
+      }, {collation: { locale: 'en', strength: 2 }})
+      res.setHeader('Cache-Control', 'public, max-age=10, s-maxage=10')
       return res.json(new ResponseSuccess(txs))
     } catch (err) {
       console.error(err)
@@ -39,12 +40,13 @@ export class TransactionController {
         blockNumber: 1,
         creates: 1,
         to: 1,
+        from: 1,
         value: 1,
         gas: 1,
         gasPrice: 1,
         'receipt.status': 1,
-      })
-      res.setHeader('Cache-Control', 'public, max-age=600, s-maxage=600')
+      }, {collation: { locale: 'en', strength: 2 }})
+      res.setHeader('Cache-Control', 'public, max-age=10, s-maxage=10')
       return res.json(new ResponseSuccess(txs))
     } catch (err) {
       console.error(err)
@@ -52,6 +54,32 @@ export class TransactionController {
     }
   }
 
+  async listBlockNumberTransactions(req: Request, res: Response) {
+    const blockNumber = Number(req.params.number)
+    try {
+      const txs = await TransactionModel.find({
+        blockNumber,
+      }, {
+        hash: 1,
+        _id: 0,
+        blockNumber: 1,
+        creates: 1,
+        to: 1,
+        from: 1,
+        value: 1,
+        gas: 1,
+        gasPrice: 1,
+        'receipt.status': 1,
+      }, {collation: { locale: 'en', strength: 2 }})
+      res.setHeader('Cache-Control', 'public, max-age=10, s-maxage=10')
+      return res.json(new ResponseSuccess(txs))
+    } catch (err) {
+      console.error(err)
+      return res.status(500).json(new ResponseError('ERR_LIST_BLOCK_TXS'))
+    }
+  }
+
+  
   async getTransaction(req: Request, res: Response) {
     const hash: string = req.params.hash
     try {
@@ -63,7 +91,7 @@ export class TransactionController {
       if (!tx) {
         throw Error('ERR_TX_NOT_FOUND')
       }
-      res.setHeader('Cache-Control', 'public, max-age=600, s-maxage=600')
+      res.setHeader('Cache-Control', 'public, max-age=60, s-maxage=60')
       return res.json(new ResponseSuccess(tx))
     } catch (err) {
       switch (err.message) {
