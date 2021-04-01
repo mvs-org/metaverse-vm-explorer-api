@@ -7,11 +7,22 @@ export class BlockController {
   async listBlocks(req: Request, res: Response) {
     try {
       const blocks = await BlockModel.find({}, { _id: 0, }, { sort: { number: -1 }, limit: 20 })
-      res.setHeader('Cache-Control', 'public, max-age=600, s-maxage=600')
+      res.setHeader('Cache-Control', 'public, max-age=5, s-maxage=5')
       return res.json(new ResponseSuccess(blocks))
     } catch (err) {
       console.error(err)
       return res.status(500).json(new ResponseError('ERR_LIST_BLOCKS'))
+    }
+  }
+
+  async getHeight(req: Request, res: Response) {
+    try {
+      const latestBlock = await BlockModel.findOne({}, { _id: 0, }, { sort: { number: -1 } })
+      res.setHeader('Cache-Control', 'public, max-age=5, s-maxage=5')
+      return res.json(new ResponseSuccess(latestBlock.number))
+    } catch (err) {
+      console.error(err)
+      return res.status(500).json(new ResponseError('ERR_GET_LATEST_BLOCK'))
     }
   }
 
@@ -49,7 +60,7 @@ export class BlockController {
       if (!tx) {
         throw Error('ERR_BLOCK_NOT_FOUND')
       }
-      res.setHeader('Cache-Control', 'public, max-age=600, s-maxage=600')
+      res.setHeader('Cache-Control', 'public, max-age=10, s-maxage=10')
       return res.json(new ResponseSuccess(tx))
     } catch (err) {
       switch (err.message) {
