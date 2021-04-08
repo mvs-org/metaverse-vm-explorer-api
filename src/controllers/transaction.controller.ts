@@ -136,6 +136,7 @@ export class TransactionController {
       nonce: 1,
       to: 1,
       from: 1,
+      input: 1,
       value: 1,
       gas: 1,
       gasPrice: 1,
