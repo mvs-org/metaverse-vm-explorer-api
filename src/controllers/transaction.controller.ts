@@ -78,7 +78,6 @@ export class TransactionController {
       return res.status(500).json(new ResponseError('ERR_LIST_BLOCK_TXS'))
     }
   }
-
   
   async getTransaction(req: Request, res: Response) {
     const hash: string = req.params.hash
@@ -101,5 +100,49 @@ export class TransactionController {
       console.error(err)
       return res.status(500).json(new ResponseError('ERR_GET_TX'))
     }
+  }
+
+  async listTransactions(req: Request, res: Response){
+    const address = req.query.address
+    const startblock = req.query.startblock
+    const endblock = req.query.endblock
+
+    const page = Number(req.query.page) || 0
+    const limit = Number(req.query.limit) || Number(req.query.offset) || 10
+    const skip = page * limit
+
+    const txs = await TransactionModel.find({
+      blockNumber: {
+        $gte: startblock,
+        $lte: endblock,
+      },
+      $or: [
+        {
+          from: address,
+        },
+        {
+          to: address,
+        }
+      ]
+    }, {
+      hash: 1,
+      _id: 0,
+      blockNumber: 1,
+      blockHash: 1,
+      nonce: 1,
+      to: 1,
+      from: 1,
+      value: 1,
+      gas: 1,
+      gasPrice: 1,
+      'receipt.status': 1,
+      'receipt.gasUsed': 1,
+      'receipt.contractAddress': 1,
+    }, {
+      collation: { locale: 'en', strength: 2 },
+      limit,
+      skip,
+    })
+    return res.json(new ResponseSuccess(txs))
   }
 }
