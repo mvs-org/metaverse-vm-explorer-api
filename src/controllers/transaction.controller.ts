@@ -106,8 +106,8 @@ export class TransactionController {
 
     // define filters
     const address = req.query.address
-    const startblock = req.query.startblock
-    const endblock = req.query.endblock
+    const startblock = req.query.startblock || 0
+    const endblock = req.query.endblock || 10000000000000
 
     // define result options
     const page = Number(req.query.page) || 0
