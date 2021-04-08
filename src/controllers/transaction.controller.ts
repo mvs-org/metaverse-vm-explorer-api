@@ -103,13 +103,17 @@ export class TransactionController {
   }
 
   async listTransactions(req: Request, res: Response){
+
+    // define filters
     const address = req.query.address
     const startblock = req.query.startblock
     const endblock = req.query.endblock
 
+    // define result options
     const page = Number(req.query.page) || 0
     const limit = Number(req.query.limit) || Number(req.query.offset) || 10
     const skip = page * limit
+    const sort = req.query.sort == 'asc' ? 1 : -1
 
     const txs = await TransactionModel.find({
       blockNumber: {
@@ -142,6 +146,9 @@ export class TransactionController {
       collation: { locale: 'en', strength: 2 },
       limit,
       skip,
+      sort: {
+        blockNumber: sort,
+      }
     })
     return res.json(new ResponseSuccess(txs))
   }
