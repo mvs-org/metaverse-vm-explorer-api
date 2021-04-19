@@ -115,7 +115,7 @@ export class TransactionController {
     const skip = page * limit
     const sort = req.query.sort == 'asc' ? 1 : -1
 
-    const txs = await TransactionModel.find({
+    let txs = await TransactionModel.find({
       blockNumber: {
         $gte: startblock,
         $lte: endblock,
@@ -149,6 +149,24 @@ export class TransactionController {
       skip,
       sort: {
         blockNumber: sort,
+      }
+    })
+    txs = txs.map((tx:any)=>{
+      return {
+        blockNumber: tx.blockNumber,
+        timeStamp: tx.timeStamp,
+        hash: tx.hash,
+        nonce: tx.nonce,
+        from: tx.from,
+        to: tx.to,
+        value: tx.value,
+        gas: tx.gas,
+        gasPrice: tx.gasPrice,
+        txreceipt_status: tx.receipt.status ? 1 : 0,
+        input: tx.data,
+        contractAddress: tx.receipt.contractAddress,
+        blockHash: tx.blockHash,
+        gasUsed: tx.receipt.gasUsed,
       }
     })
     return res.json(new ResponseSuccess(txs))
