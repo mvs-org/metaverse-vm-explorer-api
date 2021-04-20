@@ -55,6 +55,7 @@ export const TransactionSchema = new Schema({
   },
   value: String,
   gas: Number,
+  confirmedAt: Number,
   gasPrice: Number,
   creates: {
       type: String,
