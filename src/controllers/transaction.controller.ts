@@ -164,7 +164,7 @@ export class TransactionController {
         gas: tx.gas,
         gasPrice: tx.gasPrice,
         txreceipt_status: tx.receipt.status ? 1 : 0,
-        input: tx.data,
+        input: tx.input,
         contractAddress: tx.receipt.contractAddress,
         blockHash: tx.blockHash,
         gasUsed: tx.receipt.gasUsed,
