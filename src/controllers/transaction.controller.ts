@@ -136,7 +136,7 @@ export class TransactionController {
       nonce: 1,
       to: 1,
       from: 1,
-      createdAt: 1,
+      confirmedAt: 1,
       input: 1,
       value: 1,
       gas: 1,
@@ -155,7 +155,7 @@ export class TransactionController {
     txs = txs.map((tx:any)=>{
       return {
         blockNumber: tx.blockNumber,
-        timeStamp: tx.createdAt,
+        timeStamp: tx.confirmedAt,
         hash: tx.hash,
         nonce: tx.nonce,
         from: tx.from,
