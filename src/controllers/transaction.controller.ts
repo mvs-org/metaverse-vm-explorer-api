@@ -104,6 +104,9 @@ export class TransactionController {
 
   async listTransactions(req: Request, res: Response){
 
+    if(req.query.action && req.query.action !== 'txlist'){
+      return res.json(new ResponseSuccess([]))
+    }
     // define filters
     const address = req.query.address
     const startblock = req.query.startblock || 0
