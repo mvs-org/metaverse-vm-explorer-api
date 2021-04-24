@@ -14,13 +14,19 @@ export class TransactionController {
         _id: 0,
         blockNumber: 1,
         creates: 1,
+        confirmedAt: 1,
         to: 1,
         from: 1,
         value: 1,
         gas: 1,
         gasPrice: 1,
         'receipt.status': 1,
-      }, {collation: { locale: 'en', strength: 2 }})
+      }, {
+        collation: { locale: 'en', strength: 2 },
+        sort: {
+          blockNumber: -1,
+        },
+      })
       res.setHeader('Cache-Control', 'public, max-age=10, s-maxage=10')
       return res.json(new ResponseSuccess(txs))
     } catch (err) {
@@ -39,13 +45,19 @@ export class TransactionController {
         _id: 0,
         blockNumber: 1,
         creates: 1,
+        confirmedAt: 1,
         to: 1,
         from: 1,
         value: 1,
         gas: 1,
         gasPrice: 1,
         'receipt.status': 1,
-      }, {collation: { locale: 'en', strength: 2 }})
+      }, {
+        collation: { locale: 'en', strength: 2 },
+        sort: {
+          blockNumber: -1,
+        },
+    })
       res.setHeader('Cache-Control', 'public, max-age=10, s-maxage=10')
       return res.json(new ResponseSuccess(txs))
     } catch (err) {
@@ -70,7 +82,9 @@ export class TransactionController {
         gas: 1,
         gasPrice: 1,
         'receipt.status': 1,
-      }, {collation: { locale: 'en', strength: 2 }})
+      }, {
+        collation: { locale: 'en', strength: 2 },
+      })
       res.setHeader('Cache-Control', 'public, max-age=10, s-maxage=10')
       return res.json(new ResponseSuccess(txs))
     } catch (err) {
