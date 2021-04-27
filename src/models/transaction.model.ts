@@ -64,6 +64,7 @@ export const TransactionSchema = new Schema({
       index: true,
   },
   receipt: TransactionReceiptSchema,
+  details: Object,
 }, {
   collection: 'tx',
 })
