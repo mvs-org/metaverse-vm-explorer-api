@@ -83,7 +83,7 @@ export class EtherExplorerController {
         gasPrice: tx.gasPrice,
         txreceipt_status: tx.receipt?.status ? 1 : 0,
         input: tx.input,
-        contractAddress: tx.receipt?.contractAddress,
+        contractAddress: tx.to,
         blockHash: tx.blockHash,
         gasUsed: tx.receipt?.gasUsed,
         confirmations: Math.max(latestBlock.number - tx.blockNumber, 0)
