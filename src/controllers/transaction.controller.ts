@@ -2,6 +2,8 @@ import { Request, Response } from 'express'
 import { ResponseError, ResponseSuccess } from '../helpers/message.helper'
 import { TransactionModel } from '../models/transaction.model'
 
+const GENE_FINANCE_ROUTER_V2_CONTRACT_ID = '0xa61258EC3A0f0c99461Ea2F3458930a1dBEacF16'
+
 export class TransactionController {
 
   async listTransactionsFrom(req: Request, res: Response) {
@@ -165,6 +167,67 @@ export class TransactionController {
       collation: { locale: 'en', strength: 2 },
       limit,
       skip,
+      sort: {
+        blockNumber: sort,
+      }
+    })
+    txs = txs.map((tx:any)=>{
+      return {
+        blockNumber: tx.blockNumber,
+        timeStamp: tx.confirmedAt,
+        hash: tx.hash,
+        nonce: tx.nonce,
+        from: tx.from,
+        to: tx.to,
+        value: tx.value,
+        gas: tx.gas,
+        gasPrice: tx.gasPrice,
+        txreceipt_status: tx.receipt.status ? 1 : 0,
+        input: tx.input,
+        contractAddress: tx.receipt.contractAddress,
+        blockHash: tx.blockHash,
+        gasUsed: tx.receipt.gasUsed,
+      }
+    })
+    return res.json(new ResponseSuccess(txs))
+  }
+
+  async swapList(req: Request, res: Response){
+
+    // define result options
+    const limit = Number(req.query.limit) || Number(req.query.offset) || 10
+    const sort = req.query.sort == 'asc' ? 1 : -1
+
+    let txs = await TransactionModel.find({
+      details: { $exists: true },
+      to: GENE_FINANCE_ROUTER_V2_CONTRACT_ID,
+      'details.call.name': {
+          $in: [
+              'swapExactTokensForETH',
+              'swapExactTokensForTokens',
+              'swapExactETHForTokens',
+          ]
+      },
+      'receipt.status': true, 
+    }, {
+      hash: 1,
+      _id: 0,
+      blockNumber: 1,
+      blockHash: 1,
+      nonce: 1,
+      to: 1,
+      from: 1,
+      confirmedAt: 1,
+      input: 1,
+      value: 1,
+      gas: 1,
+      gasPrice: 1,
+      'receipt.status': 1,
+      'receipt.gasUsed': 1,
+      'receipt.contractAddress': 1,
+    }, {
+      collation: { locale: 'en', strength: 2 },
+      limit,
       sort: {
         blockNumber: sort,
       }

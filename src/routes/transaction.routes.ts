@@ -13,6 +13,7 @@ export class TransactionRoutes {
     app.route('/txs').get(this.etherExplorerController.index)
     app.route('/tx/:hash').get(this.transactionController.getTransaction)
     app.route('/txs/block/:number').get(this.transactionController.listBlockNumberTransactions)
+    app.route('/txs/swaplist').get(this.transactionController.swapList)
   }
 
 }
