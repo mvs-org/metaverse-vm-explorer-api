@@ -5,17 +5,17 @@ import { TransactionModel } from '../models/transaction.model'
 
 export class EtherExplorerController {
 
-  async index(req: Request, res: Response){
-    switch(req.query.action){
+  async index(req: Request, res: Response) {
+    switch (req.query.action) {
       case 'tokentx':
         return EtherExplorerController.listTokenTransactions(req, res)
       case 'txlist':
-        default:
+      default:
         return EtherExplorerController.listTransactions(req, res)
     }
   }
 
-  static async listTokenTransactions(req: Request, res: Response){
+  static async listTokenTransactions(req: Request, res: Response) {
     // define filters
     const address = req.query.address
     const startblock = req.query.startblock || 0
@@ -66,7 +66,7 @@ export class EtherExplorerController {
       }
     })
     const latestBlock = await BlockModel.findOne({}, { _id: 0, }, { sort: { number: -1 } })
-    txs = txs.map((tx:any)=>{
+    txs = txs.map((tx: any) => {
       return {
         blockNumber: tx.blockNumber,
         timeStamp: tx.confirmedAt,
@@ -90,7 +90,7 @@ export class EtherExplorerController {
     return res.json(new ResponseSuccess(txs))
   }
 
-  static async listTransactions(req: Request, res: Response){
+  static async listTransactions(req: Request, res: Response) {
     // define filters
     const address = req.query.address
     const startblock = req.query.startblock || 0
@@ -107,14 +107,14 @@ export class EtherExplorerController {
         $gte: startblock,
         $lte: endblock,
       },
-      $or: [
+      ...( address && { $or: [
         {
           from: address,
         },
         {
           to: address,
         }
-      ]
+      ] } ),
     }, {
       hash: 1,
       _id: 0,
@@ -140,7 +140,7 @@ export class EtherExplorerController {
       }
     })
     const latestBlock = await BlockModel.findOne({}, { _id: 0, }, { sort: { number: -1 } })
-    txs = txs.map((tx:any)=>{
+    txs = txs.map((tx: any) => {
       return {
         blockNumber: tx.blockNumber,
         timeStamp: tx.confirmedAt,
